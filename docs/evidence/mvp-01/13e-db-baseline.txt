@@ -1,0 +1,45 @@
+
+> socorre-ai-backend@1.0.0 test:db-baseline
+> node scripts/tow/run-db-baseline-gate.js
+
+[db-gate] compose project: socorre-tow-test-55432-cb0d0933
+[db-gate] stage 1/9: guard + container up (previous environment destroyed first)
+PostgreSQL test environment destroyed (containers, volumes, network)
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Creating 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Starting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Started 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Waiting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Healthy 
+PostgreSQL test container is healthy
+healthcheck: healthy
+[db-gate] target: postgresql://tow_test@127.0.0.1:55432/socorre_ai_tow_test (purpose: test)
+[db-gate] stage 2/9: verify the database is empty
+[db-gate] database is empty (0 tables) — new disposable volume confirmed
+[db-gate] stage 3/9: migrate from zero
+[db-gate] migrations applied: 001_baseline_schema.js, 002_baseline_settings.js, 003_mvp01_tow_foundation.js (batch 1)
+[db-gate] stage 4/9: seed the default administrator
+[db-gate] default administrator created: gate-admin-48808865@example.test (id=1)
+[db-gate] stage 5/9: assert the clean baseline
+[db-gate] baseline OK: 32 tables, 31 row(s), settings=25
+[db-gate] stage 6/9: schema snapshot (run 1)
+[db-gate] run 1 fingerprint: 37cee47edc8dd1084786ab5fe3c32511c71b9a4a2788f67406391916c7cc0f59
+[db-gate] stage 7/9: guarded destructive reset + repeat
+[db-gate] guarded reset dropped 32 table(s)
+[db-gate] repeat OK: 32 tables, 31 row(s)
+[db-gate] stage 8/9: schema snapshot (run 2) + fingerprint comparison
+[db-gate] run 2 fingerprint: 37cee47edc8dd1084786ab5fe3c32511c71b9a4a2788f67406391916c7cc0f59
+[db-gate] fingerprints identical: reset+migrate+seed reproduces the same schema
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopping 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopped 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removing 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removed 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removing 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removed 
+PostgreSQL test environment destroyed (containers, volumes, network)
+[db-gate] teardown verified: no container/volume/network left for project "socorre-tow-test-55432-cb0d0933"
+[db-gate] GREEN — evidence written to /Volumes/Reiko/projects/work/socorre-system/docs/evidence/t01/db-baseline-gate.json

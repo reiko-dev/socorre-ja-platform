@@ -1,0 +1,64 @@
+### validate:openapi
+
+> socorre-ai-backend@1.0.0 validate:openapi
+> node scripts/tow/validate-openapi.js
+
+Tow OpenAPI contract validation
+  docs:                             /Volumes/Reiko/projects/work/socorre-system/docs/tow
+  canonical entrypoint:             tow-api-contract.openapi.yaml
+  composition artifact:             tow-api-contract.base.openapi.yaml
+  OpenAPI version:                  3.1.0
+  Contract version:                 1.0.0-draft.4
+  Canonical paths:                  56
+  Base paths:                       51
+  Composed paths:                   56
+  Composed operations:              66
+  Shadowed base paths:              10
+  Unallowlisted dropped methods:    0
+  $ref occurrences checked:         490
+  External/local-file $refs:        124
+  Unresolved refs:                  0
+  Missing operationId:              0
+  Duplicate operationId:            0
+  Path-parameter mismatches:        0
+  Request bodies checked:           24
+  Request bodies without schema:    0
+  Responses checked:                66
+  Operations without 2xx:           0
+  2xx responses without schema:     0
+  Component schemas checked:        110
+  Inline schema nodes checked:      124
+  JSON Schema definition errors:    0
+  Canonical enum mismatches:        0
+  Forbidden legacy enum values:     0
+  TowSettingsPatch errors:          0
+  RESULT:                           PASS
+
+Shadowed base paths (base methods must survive composition or be allowlisted):
+  - /tow/requests: base=[post] composed=[get,post] dropped=[] added=[get]
+  - /tow/partner/opportunities: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/settings: base=[get,patch] composed=[get,patch] dropped=[] added=[]
+  - /admin/tow/vehicle-documents/{documentId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/requests/{requestId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/disputes/{disputeId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches/preview: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches: base=[post] composed=[post] dropped=[] added=[]
+  - /admin/tow/payout-batches/{batchId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches/{batchId}/process: base=[post] composed=[post] dropped=[] added=[]
+  allowlist: (empty — the frozen contract drops no base method)
+### test:contract
+
+> socorre-ai-backend@1.0.0 test:contract
+> jest tests/contract --runInBand
+
+PASS tests/contract/openapi.structure.test.js
+PASS tests/contract/towRefResolution.test.js
+PASS tests/contract/consumerSmoke.test.js
+PASS tests/contract/towSettingsPatch.test.js
+PASS tests/contract/consumerDiscovery.test.js
+
+Test Suites: 5 passed, 5 total
+Tests:       62 passed, 62 total
+Snapshots:   0 total
+Time:        1.642 s, estimated 2 s
+Ran all test suites matching /tests\/contract/i.

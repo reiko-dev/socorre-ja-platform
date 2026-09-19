@@ -17,6 +17,24 @@ const testDb = require('./helpers/testDb');
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-jwt-secret-key';
 process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
+// MVP-01: keep TowVehicle document uploads out of the repository tree during
+// tests; the directory lives under the OS temp dir and is removed afterwards.
+if (!process.env.TOW_DOCUMENT_STORAGE_DIR) {
+  const os = require('os');
+  const fs = require('fs');
+  const path = require('path');
+  const dir = path.join(os.tmpdir(), `socorre-tow-doc-tests-${process.pid}`);
+  process.env.TOW_DOCUMENT_STORAGE_DIR = dir;
+  if (typeof afterAll === 'function') {
+    afterAll(() => {
+      try {
+        fs.rmSync(dir, { recursive: true, force: true });
+      } catch (error) {
+        /* best effort */
+      }
+    });
+  }
+}
 process.env.FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'test-project';
 process.env.REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379/1';
 // Rate limit de produção é 100 req/15min por IP: numa suíte que exercita dezenas

@@ -1,0 +1,121 @@
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Creating 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Starting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Started 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Waiting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Healthy 
+PostgreSQL test container is healthy
+healthcheck: healthy
+PASS tests/tow/baseline/dbBaseline.e2e.test.js
+  T01 PostgreSQL — clean baseline
+    MIGRATION — boots from a truly empty database
+      ✓ applies exactly the baseline migrations from zero (1 ms)
+      ✓ the migrations directory contains no legacy data migration (1 ms)
+      ✓ creates every table the application needs (3 ms)
+      ✓ running migrate again applies nothing (idempotent) (16 ms)
+      ✓ a reset + migrate reproduces the same schema fingerprint (278 ms)
+      ✓ does not depend on legacy data: no INSERT of functional rows in the schema migration
+      ✓ an unmanaged database is refused by migrate (pre-T01 upgrade path is the guarded reset) (247 ms)
+    DATABASE — the constraints and indexes are really applied
+      ✓ foreign keys reject invalid references (8 ms)
+      ✓ the dispute reference added by T01 is a real foreign key (2 ms)
+      ✓ unique constraints are really applied (2 ms)
+      ✓ the case-insensitive e-mail index really blocks a duplicate (1 ms)
+      ✓ the partial unique of tow_proposals allows one pending proposal per partner (2 ms)
+      ✓ check constraints and NOT NULL are really applied (3 ms)
+      ✓ the expected indexes exist (1 ms)
+      ✓ the redundant indexes removed by T01 are gone (1 ms)
+    SEED — exactly one administrator, no functional data
+      ✓ a fresh migrate + seed produces the clean baseline (546 ms)
+      ✓ the seeded administrator can log in with the configured password (bcrypt cost 12) (522 ms)
+      ✓ re-running the seed creates no duplicate and changes nothing (4 ms)
+      ✓ no functional table has rows (18 ms)
+      ✓ the seed refuses to run without credentials, before touching the database (2 ms)
+      ✓ the assertion catches a dirty baseline (negative control) (28 ms)
+      ✓ the assertion rejects any second user, even a non-admin one (32 ms)
+    SAFETY — the commands refuse anything but the disposable target
+      ✓ the harness target passes every rule
+      ✓ the destructive reset is refused without the consent token
+      ✓ the consent token authorizes only the disposable target
+      ✓ an incompatible DATABASE_URL is rejected by the runner (2 ms)
+      ✓ a production-sounding database name is rejected
+      ✓ the gate compose file mounts no host volume (data lives in tmpfs)
+      ✓ RESET-DIRECT-1 (live) the guarded reset without consent leaves the schema intact (5 ms)
+      ✓ RESET-DIRECT-7 (live) an arbitrary Knex connection cannot be passed to the guarded reset (2 ms)
+      ✓ RESET-DIRECT-7 (live) a production-like target cannot reuse the disposable authorization (1 ms)
+      ✓ RESET-DIRECT-8 (live) the authorized disposable target resets normally (590 ms)
+    FRESHNESS — the whole lifecycle is repeatable
+      ✓ reset + migrate + seed + assert reproduces the first run (535 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       33 passed, 33 total
+Snapshots:   0 total
+Time:        3.75 s, estimated 4 s
+Ran all test suites matching /tests\/tow\/baseline\/dbBaseline.e2e.test.js/i.
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:35 +0000] "POST /api/emergency-requests/1/start HTTP/1.1" 200 1663 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:35 +0000] "POST /api/emergency-requests/1/complete HTTP/1.1" 200 1709 "-" "-"
+PASS tests/tow/towPostgres.e2e.test.js
+  PostgreSQL E2E: fluxo HTTP de guincho
+    ✓ parceiro inicia e conclui, persistindo estados no PostgreSQL (44 ms)
+    ✓ aceite concorrente no PostgreSQL escolhe exatamente uma proposta (11 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        0.952 s
+Ran all test suites matching /tests\/tow\/towPostgres.e2e.test.js/i.
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1972 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 200 2057 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&exclude_proposed=true HTTP/1.1" 200 143 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 200 2091 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals/1/withdraw HTTP/1.1" 200 554 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals/1/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1990 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 409 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.55&longitude=-46.63&radius=0 HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=0&longitude=0 HTTP/1.1" 400 165 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 315 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 246 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1992 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=&longitude= HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude= HTTP/1.1" 400 203 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1993 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1974 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1975 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.55&longitude=-46.63&radius=30000 HTTP/1.1" 200 7975 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 400 141 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:30:36 +0000] "POST /api/emergency-requests HTTP/1.1" 400 143 "-" "-"
+PASS tests/tow/g3TowPostgres.e2e.test.js
+  PostgreSQL E2E G3: nearby, propostas e coordenadas
+    ✓ nearby tow usa PostgreSQL real: deadline futuro, raio, exclude_proposed e cadastro do parceiro (91 ms)
+    ✓ duplicata concorrente no PostgreSQL: índice parcial deixa exatamente uma proposta e um 409 (39 ms)
+    ✓ guardas de coordenadas no PostgreSQL: 0,0, raio, admin e parceiro sem cadastro (16 ms)
+    ✓ limite de propostas no PostgreSQL: parceiros distintos concorrentes na última vaga => um 201 e um 400 (21 ms)
+    ✓ coordenada explícita vazia no PostgreSQL => 400 invalid_coordinates sem fallback cadastral (5 ms)
+    ✓ linhas legadas no PostgreSQL (fora dos limites ou 0,0) não quebram nem aparecem no nearby tow (30 ms)
+    ✓ schema do POST no PostgreSQL: par opcional incompleto/0,0 => invalid_coordinates; demais falhas => invalid_payload (7 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        0.741 s
+Ran all test suites matching /tests\/tow\/g3TowPostgres.e2e.test.js/i.
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopping 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopped 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removing 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removed 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removing 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removed 
+PostgreSQL test environment destroyed (containers, volumes, network)
+[mvp01-pg] DONE

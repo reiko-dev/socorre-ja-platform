@@ -1,0 +1,104 @@
+PASS tests/tow/mvp01/towPersistence.e2e.test.js
+PASS tests/tow/mvp01/towVehicleConcurrency.e2e.test.js
+PASS tests/tow/mvp01/towFoundationApi.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/module-status HTTP/1.1" 200 137 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/module-status HTTP/1.1" 200 154 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 237 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 422 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 344 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/tow/vehicles/1 HTTP/1.1" 200 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/1/activate HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1 HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/2/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 654 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 422 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/3 HTTP/1.1" 404 79 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 409 118 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 963 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/tow/vehicles/5 HTTP/1.1" 409 118 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/5 HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/7/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/7/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/7/documents HTTP/1.1" 200 285 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/7 HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 200 343 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/1/approve HTTP/1.1" 200 297 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/7 HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/8/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 422 113 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 200 313 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/9/documents HTTP/1.1" 422 130 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/9/documents HTTP/1.1" 200 36 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/10/documents HTTP/1.1" 201 296 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/3/approve HTTP/1.1" 200 319 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/10 HTTP/1.1" 200 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/11/documents HTTP/1.1" 201 296 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/4/approve HTTP/1.1" 200 319 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/11 HTTP/1.1" 200 335 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 422 148 "-" "-"
+PASS tests/tow/mvp01/towDocumentDownload.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/2/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1/documents/1/download HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1/documents/1/download HTTP/1.1" 404 79 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/2/documents/1/download HTTP/1.1" 404 88 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1/documents/1/download HTTP/1.1" 200 28 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/2/documents/2/download HTTP/1.1" 200 27 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 200 28 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents/999999/download HTTP/1.1" 404 88 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1/documents/999999/download HTTP/1.1" 404 88 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents/3/download HTTP/1.1" 200 7 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles/1/documents HTTP/1.1" 200 535 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 200 849 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /uploads/tow-vehicles/1/d3fb9ee882d128cc61f7.jpg HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /tow-vehicles/1/d3fb9ee882d128cc61f7.jpg HTTP/1.1" 404 68 "-" "-"
+PASS tests/tow/mvp01/towFoundationAuthz.test.js
+PASS tests/tow/mvp01/towFoundationDomain.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/module HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/tow/vehicles HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 201 273 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/1/approve HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/admin/tow/vehicle-documents/1/reject HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles HTTP/1.1" 403 106 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:14:10 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 404 79 "-" "-"
+PASS tests/tow/mvp01/towSettingsRepository.test.js
+PASS tests/tow/mvp01/towEligibilityIntegration.test.js
+PASS tests/tow/mvp01/towPartnerRepository.test.js
+PASS tests/tow/mvp01/towArchitectureBoundary.test.js
+PASS tests/tow/mvp01/towLocalFileStorage.test.js
+PASS tests/tow/mvp01/towEligibilityService.test.js
+PASS tests/tow/mvp01/towDocumentService.test.js
+PASS tests/tow/mvp01/towActivateConflictMapping.test.js
+
+Test Suites: 14 passed, 14 total
+Tests:       115 passed, 115 total
+Snapshots:   0 total
+Time:        2.361 s
+Ran all test suites matching /tests\/tow\/mvp01/i.

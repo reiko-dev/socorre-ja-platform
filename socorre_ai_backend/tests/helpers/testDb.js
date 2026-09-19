@@ -111,6 +111,9 @@ const TABLES = [
   'revoked_tokens',
   'notifications',
   'real_time_tracking',
+  'service_modules',
+  'tow_vehicles',
+  'tow_vehicle_documents',
 ];
 
 const SCHEMA = [
@@ -681,6 +684,58 @@ const SCHEMA = [
     latitude DECIMAL(10, 8),
     longitude DECIMAL(11, 8),
     status VARCHAR(30),
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS service_modules (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    module_key VARCHAR(50) NOT NULL UNIQUE,
+    service_key VARCHAR(50) NOT NULL,
+    partner_type VARCHAR(50) NOT NULL,
+    enabled INTEGER NOT NULL DEFAULT 1,
+    disabled_reason TEXT,
+    updated_by INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS tow_vehicles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    partner_id INTEGER NOT NULL,
+    plate VARCHAR(20) NOT NULL,
+    make VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    year INTEGER NOT NULL,
+    equipment_type VARCHAR(30) NOT NULL,
+    supported_vehicle_classes TEXT NOT NULL,
+    max_towed_weight_kg INTEGER NOT NULL,
+    active INTEGER NOT NULL DEFAULT 0,
+    minimum_charge_cents INTEGER NOT NULL,
+    included_km DECIMAL(10, 3) NOT NULL,
+    price_per_additional_km_cents INTEGER NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (partner_id, plate)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS tow_vehicle_documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tow_vehicle_id INTEGER NOT NULL,
+    partner_id INTEGER NOT NULL,
+    document_type VARCHAR(60) NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_url VARCHAR(500) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    file_size INTEGER NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    rejection_reason TEXT,
+    expires_at TEXT,
+    verified_by INTEGER,
+    verified_at TEXT,
+    uploaded_at TEXT DEFAULT CURRENT_TIMESTAMP,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   )`,

@@ -1,0 +1,146 @@
+### NC-A: remove the 'deactivate siblings' step from vehicle activation
+382be500beccc746d2d7f210be9c2ea2eeeb7afc827c61a1523f3e23aa900ea1  src/modules/tow/adapters/persistence/vehicle-repository.js
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/module-status HTTP/1.1" 200 137 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/module-status HTTP/1.1" 200 154 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 237 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 422 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 344 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/tow/vehicles/1 HTTP/1.1" 200 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles/1/activate HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles/1 HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles/2/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 653 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 422 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles/3 HTTP/1.1" 404 79 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles/4/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles/4/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles/4/documents HTTP/1.1" 200 307 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles/4 HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 200 362 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/admin/tow/vehicle-documents/1/approve HTTP/1.1" 200 316 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/tow/vehicles/4 HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/tow/vehicles/5/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 422 113 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:31:45 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 422 148 "-" "-"
+FAIL tests/tow/mvp01/towFoundationApi.test.js
+  MVP-01 API — Tow foundation
+    module status and toggle
+      ✓ module-status is public and starts enabled (14 ms)
+      ✓ a non-admin cannot toggle or read the admin module view (13 ms)
+      ✓ admin toggle disables new business and is idempotent (10 ms)
+      ✓ an invalid toggle body is rejected as validation_error (4 ms)
+    TowVehicle lifecycle
+      ✓ creates, lists, updates and activates a vehicle (15 ms)
+      ✕ activating a second vehicle transfers the single active slot (9 ms)
+      ✓ invalid vehicle input is a validation_error (1 ms)
+      ✓ another partner vehicle is isolated (not_found) (2 ms)
+    vehicle documents and operational eligibility
+      ✓ uploaded documents are pending and do not make the vehicle operational (12 ms)
+      ✓ admin approval makes the vehicle operational (4 ms)
+      ✓ a non-admin cannot list or approve vehicle documents (1 ms)
+      ✓ reject requires a reason and marks the document rejected (8 ms)
+    typed Tow settings
+      ✓ admin can read the MVP defaults and patch a validated value (5 ms)
+      ✓ an invalid settings patch is a validation_error (2 ms)
+
+  ● MVP-01 API — Tow foundation › TowVehicle lifecycle › activating a second vehicle transfers the single active slot
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"active": true, "document_status": "pending", "equipment_type": "flatbed", "id": "1", "make": "Scania", "max_towed_weight_kg": 4000, "model": "F-4000", "plate": "ABC1D23", "pricing": {"included_km": 10, "minimum_charge_cents": 15000, "price_per_additional_km_cents": 800}, "supported_vehicle_classes": ["light_vehicle"], "year": 2020}, {"active": true, "document_status": "pending", "equipment_type": "flatbed", "id": "2", "make": "Ford", "max_towed_weight_kg": 4000, "model": "F-4000", "plate": "XYZ9Z99", "pricing": {"included_km": 10, "minimum_charge_cents": 15000, "price_per_additional_km_cents": 800}, "supported_vehicle_classes": ["light_vehicle"], "year": 2020}]
+
+      166 |       const listed = await request(app).get('/api/tow/vehicles').set(alpha.headers);
+      167 |       const active = listed.body.data.items.filter((item) => item.active === true);
+    > 168 |       expect(active).toHaveLength(1);
+          |                      ^
+      169 |       expect(String(active[0].id)).toBe(String(secondId));
+      170 |     });
+      171 |
+
+      at Object.toHaveLength (tests/tow/mvp01/towFoundationApi.test.js:168:22)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 13 passed, 14 total
+Snapshots:   0 total
+Time:        1.353 s
+Ran all test suites matching /tests\/tow\/mvp01\/towFoundationApi.test.js/i.
+ncA_exit=1
+382be500beccc746d2d7f210be9c2ea2eeeb7afc827c61a1523f3e23aa900ea1  src/modules/tow/adapters/persistence/vehicle-repository.js
+--- restored ---
+### NC-B: treat a pending document as satisfied in the domain eligibility policy
+6a7e18bc80376168cca1c92ec91f1e4f9a2a56dd2ec1c365a860c1c5047a2196  src/modules/tow/domain/eligibility.js
+FAIL tests/tow/mvp01/towFoundationDomain.test.js
+  MVP-01 UNIT — Tow domain
+    canonical module identity
+      ✓ module_key, service_key and partner_type are all "tow" (1 ms)
+      ✓ availability policy answers "new business allowed"
+      ✓ disabled module throws the canonical service_module_disabled error (7 ms)
+      ✓ graceful-drain contract matches the MVP semantics (1 ms)
+    typed MVP settings
+      ✓ defaults are complete and typed
+      ✓ a valid partial patch merges over the current settings (1 ms)
+      ✓ unknown keys, empty patches and wrong types are rejected as validation_error (7 ms)
+      ✓ cross-field invariant initial radius <= max radius is enforced (1 ms)
+    TowVehicle invariants and canonical pricing
+      ✓ a valid input is normalized without inventing fields (2 ms)
+      ✓ rejects invalid class/equipment/weight/year/plate and empty or duplicate classes (3 ms)
+      ✓ pricing must be non-negative integer cents, never floats (1 ms)
+    document policy
+      ✓ statuses are the canonical four (1 ms)
+      ✓ approved and (not expired | future expiry) is valid; expired is not
+      ✓ pending/rejected never satisfy the requirement
+      ✓ at least one approved, valid required document satisfies the vehicle
+    centralized compatibility policy
+      ✓ accepts a supported class within capacity (1 ms)
+      ✓ rejects an unsupported class with vehicle_not_compatible
+      ✓ rejects a supported class above the towed-weight capacity
+      ✓ requires weight/PBT for medium_truck and heavy_truck
+    operational eligibility composition
+      ✓ all four conditions satisfied => eligible
+      ✓ disabled module short-circuits with service_module_disabled
+      ✓ no active vehicle => vehicle_not_operational
+      ✓ missing required document => tow_document_required
+      ✕ pending/rejected/expired document => tow_document_not_approved (2 ms)
+      ✓ incompatible vehicle => vehicle_not_compatible
+
+  ● MVP-01 UNIT — Tow domain › operational eligibility composition › pending/rejected/expired document => tow_document_not_approved
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      240 |       ]) {
+      241 |         const result = domain.evaluateEligibility({ moduleStatus: enabled, vehicle, documents: [doc], requested, now });
+    > 242 |         expect(result.eligible).toBe(false);
+          |                                 ^
+      243 |         expect(result.code).toBe('tow_document_not_approved');
+      244 |       }
+      245 |     });
+
+      at Object.toBe (tests/tow/mvp01/towFoundationDomain.test.js:242:33)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 24 passed, 25 total
+Snapshots:   0 total
+Time:        0.314 s, estimated 1 s
+Ran all test suites matching /tests\/tow\/mvp01\/towFoundationDomain.test.js/i.
+ncB_exit=1
+6a7e18bc80376168cca1c92ec91f1e4f9a2a56dd2ec1c365a860c1c5047a2196  src/modules/tow/domain/eligibility.js
+--- restored ---

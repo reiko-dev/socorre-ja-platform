@@ -1,0 +1,472 @@
+FAIL tests/tow/mvp01/towDocumentDownload.test.js
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › anonymous download is 401 on both surfaces
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 401
+    Received: 404
+
+      105 |   test('anonymous download is 401 on both surfaces', async () => {
+      106 |     const admin = await request(app).get(`/api/admin/tow/vehicle-documents/${alphaDocumentId}/download`);
+    > 107 |     expect(admin.status).toBe(401);
+          |                          ^
+      108 |
+      109 |     const partner = await request(app).get(`/api/tow/vehicles/${alphaVehicleId}/documents/${alphaDocumentId}/download`);
+      110 |     expect(partner.status).toBe(401);
+
+      at Object.toBe (tests/tow/mvp01/towDocumentDownload.test.js:107:26)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › a non-admin cannot use the admin download route
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 404
+
+      115 |       .get(`/api/admin/tow/vehicle-documents/${alphaDocumentId}/download`)
+      116 |       .set(alphaHeaders);
+    > 117 |     expect(response.status).toBe(403);
+          |                             ^
+      118 |   });
+      119 |
+      120 |   test('another tow partner gets 404 and never the bytes (no existence leak)', async () => {
+
+      at Object.toBe (tests/tow/mvp01/towDocumentDownload.test.js:117:29)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › another tow partner gets 404 and never the bytes (no existence leak)
+
+    TypeError: Cannot read properties of undefined (reading 'code')
+
+      123 |       .set(betaHeaders);
+      124 |     expect(foreignVehicle.status).toBe(404);
+    > 125 |     expect(foreignVehicle.body.error.code).toBe('not_found');
+          |                                      ^
+      126 |
+      127 |     const foreignDocument = await request(app)
+      128 |       .get(`/api/tow/vehicles/${betaVehicleId}/documents/${alphaDocumentId}/download`)
+
+      at Object.code (tests/tow/mvp01/towDocumentDownload.test.js:125:38)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › the owning partner downloads only their own bytes with the stored mime
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      137 |       alphaHeaders,
+      138 |     );
+    > 139 |     expect(own.status).toBe(200);
+          |                        ^
+      140 |     expect(own.headers['content-type']).toMatch(/image\/jpeg/);
+      141 |     expect(own.body.equals(alphaBytes)).toBe(true);
+      142 |
+
+      at Object.toBe (tests/tow/mvp01/towDocumentDownload.test.js:139:24)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › admin downloads any document
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      152 |   test('admin downloads any document', async () => {
+      153 |     const response = await getBytes(`/api/admin/tow/vehicle-documents/${alphaDocumentId}/download`, adminHeaders);
+    > 154 |     expect(response.status).toBe(200);
+          |                             ^
+      155 |     expect(response.headers['content-type']).toMatch(/image\/jpeg/);
+      156 |     expect(response.body.equals(alphaBytes)).toBe(true);
+      157 |   });
+
+      at Object.toBe (tests/tow/mvp01/towDocumentDownload.test.js:154:29)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › Content-Disposition is an attachment with a sanitized filename
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      169 |   test('Content-Disposition is an attachment with a sanitized filename', async () => {
+      170 |     const hostile = await upload(alphaHeaders, alphaVehicleId, Buffer.from('hostile'), '../../evil" name.jpg');
+    > 171 |     const documentId = hostile.body.data.id;
+          |                                          ^
+      172 |
+      173 |     const response = await getBytes(`/api/admin/tow/vehicle-documents/${documentId}/download`, adminHeaders);
+      174 |     expect(response.status).toBe(200);
+
+      at Object.id (tests/tow/mvp01/towDocumentDownload.test.js:171:42)
+
+  ● MVP-01 EXT SEC — private Tow document storage + authenticated download › the DTO file_url is the relative authenticated download path, never /uploads
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/api/tow/vehicles/1/documents/1/download"
+    Received: "/uploads/tow-documents/tow-vehicles/1/612d5b3658ce47bf28d3.jpg"
+
+      183 |     const list = await request(app).get(`/api/tow/vehicles/${alphaVehicleId}/documents`).set(alphaHeaders);
+      184 |     const partnerUrl = list.body.data.items[0].file_url;
+    > 185 |     expect(partnerUrl).toBe(`/api/tow/vehicles/${alphaVehicleId}/documents/${alphaDocumentId}/download`);
+          |                        ^
+      186 |     expect(partnerUrl).not.toMatch(/^https?:\/\//);
+      187 |     expect(partnerUrl).not.toContain('/uploads/');
+      188 |
+
+      at Object.toBe (tests/tow/mvp01/towDocumentDownload.test.js:185:24)
+
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "POST /api/tow/vehicles/2/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/tow/vehicles/1/documents/1/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/tow/vehicles/1/documents/1/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/admin/tow/vehicle-documents/1/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/admin/tow/vehicle-documents/999999/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/tow/vehicles/1/documents/999999/download HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 422 109 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /api/tow/vehicles/1/documents HTTP/1.1" 200 307 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /uploads/tow-vehicles/1/612d5b3658ce47bf28d3.jpg HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:09:11 +0000] "GET /tow-vehicles/1/612d5b3658ce47bf28d3.jpg HTTP/1.1" 404 68 "-" "-"
+FAIL tests/tow/mvp01/towFoundationDomain.test.js
+  ● MVP-01 UNIT — Tow domain › operational eligibility composition › a non-tow partner is not eligible (partner_not_operational)
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+      236 |         partner: { id: 1, type: 'mechanic' }, moduleStatus: enabled, vehicle, documents, requested, now,
+      237 |       });
+    > 238 |       expect(result).toMatchObject({ eligible: false, code: 'partner_not_operational' });
+          |                      ^
+      239 |     });
+      240 |
+      241 |     test('a missing partner is not eligible (partner_not_operational)', () => {
+
+      at Object.toMatchObject (tests/tow/mvp01/towFoundationDomain.test.js:238:22)
+
+  ● MVP-01 UNIT — Tow domain › operational eligibility composition › a missing partner is not eligible (partner_not_operational)
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+      243 |         partner: null, moduleStatus: enabled, vehicle, documents, requested, now,
+      244 |       });
+    > 245 |       expect(result).toMatchObject({ eligible: false, code: 'partner_not_operational' });
+          |                      ^
+      246 |     });
+      247 |
+      248 |     test('a disabled module is reported even for a non-tow partner', () => {
+
+      at Object.toMatchObject (tests/tow/mvp01/towFoundationDomain.test.js:245:22)
+
+FAIL tests/tow/mvp01/towEligibilityIntegration.test.js
+  ● MVP-01 EXT — eligibility via composition + persistence › mutating the partner type tow -> non-tow revokes eligibility without touching the vehicle
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+       97 |
+       98 |     await expect(services.eligibilityService.evaluate({ partnerId: partner.id, requested }))
+    >  99 |       .resolves.toMatchObject({ eligible: false, code: 'partner_not_operational' });
+          |                 ^
+      100 |
+      101 |     const after = await services.vehicleRepository.findById(vehicle.id);
+      102 |     expect(after).toEqual(before);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:174:22)
+      at Object.toMatchObject (tests/tow/mvp01/towEligibilityIntegration.test.js:99:17)
+
+FAIL tests/tow/mvp01/towLocalFileStorage.test.js
+  ● MVP-01 EXT UNIT — private local file storage › the default base directory is outside the public uploads tree
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "/private/tow-documents"
+    Received string:    "/Volumes/Reiko/projects/work/socorre-system/socorre_ai_backend/uploads/tow-documents"
+
+      36 |       const storage = createLocalFileStorage();
+      37 |       const baseDir = path.resolve(storage.baseDir);
+    > 38 |       expect(baseDir).toContain(`${path.sep}private${path.sep}tow-documents`);
+         |                       ^
+      39 |       expect(baseDir.split(path.sep)).not.toContain('uploads');
+      40 |     } finally {
+      41 |       if (previous === undefined) delete process.env.TOW_DOCUMENT_STORAGE_DIR;
+
+      at Object.toContain (tests/tow/mvp01/towLocalFileStorage.test.js:38:23)
+
+  ● MVP-01 EXT UNIT — private local file storage › save returns only a key; read returns the bytes; remove deletes them
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Object {
+        "key": Any<String>,
+    +   "url": "/uploads/tow-documents/tow-vehicles/86f7fcf6a1f82c39bae4.jpg",
+      }
+
+      57 |     });
+      58 |
+    > 59 |     expect(saved).toEqual({ key: expect.any(String) });
+         |                   ^
+      60 |     expect(saved).not.toHaveProperty('url');
+      61 |     expect(typeof storage.urlFor).toBe('undefined');
+      62 |
+
+      at Object.toEqual (tests/tow/mvp01/towLocalFileStorage.test.js:59:19)
+
+  ● MVP-01 EXT UNIT — private local file storage › a key that escapes the base directory is refused
+
+    TypeError: storage.read is not a function
+
+      71 |   test('a key that escapes the base directory is refused', async () => {
+      72 |     const storage = createLocalFileStorage({ baseDir: dir });
+    > 73 |     await expect(storage.read('../../etc/passwd')).rejects.toThrow(/escapes/);
+         |                          ^
+      74 |     await expect(storage.remove('../../etc/passwd')).rejects.toThrow(/escapes/);
+      75 |   });
+      76 |
+
+      at Object.read (tests/tow/mvp01/towLocalFileStorage.test.js:73:26)
+
+  ● MVP-01 EXT UNIT — private local file storage › the private directory is git-ignored
+
+    expect(received).toMatch(expected)
+
+    Expected pattern: /socorre_ai_backend\/private/
+    Received string:  "# Miscellaneous
+    *.class
+    *.log
+    .npm-cache/
+    *.pyc
+    *.swp
+    .DS_Store
+    .atom/
+    .build/
+    .buildlog/
+    .history
+    .svn/
+    .swiftpm/
+    migrate_working_dir/·
+    # IntelliJ related
+    *.iml
+    *.ipr
+    *.iws
+    .idea/·
+    # The .vscode folder contains launch configuration and tasks you configure in
+    # VS Code which you may wish to be included in version control, so this line
+    # is commented out by default.
+    #.vscode/·
+    # Flutter/Dart/Pub related
+    **/doc/api/
+    **/ios/Flutter/.last_build_id
+    .dart_tool/
+    .flutter-plugins
+    .flutter-plugins-dependencies
+    .pub-cache/
+    .pub/
+    /build/·
+    # Symbolication related
+    app.*.symbols·
+    # Obfuscation related
+    app.*.map.json·
+    # Android Studio will place build artifacts here
+    /android/app/debug
+    /android/app/profile
+    /android/app/release·
+    # Dependencies
+    **/node_modules/·
+    # Environment / secrets — NEVER commit real credentials.
+    # Only sanitized examples (env.example, .env.example) belong in Git.
+    .env
+    .env.*
+    !.env.example
+    **/.env
+    **/.env.*
+    !**/.env.example
+    # T00: the Tow test template is a tracked, secret-free example. Without this
+    # negation it matches `**/.env.*` and is in Git only because it was force-added.
+    # The scope is intentionally one exact path: real `.env` files, `.env.test`,
+    # `.env.local`, `.env.production` and `.env.bak` stay ignored.
+    !socorre_ai_backend/.env.test.example
+    *.pem
+    *.key
+    "
+
+      78 |     const repoRoot = path.resolve(__dirname, '..', '..', '..', '..');
+      79 |     const gitignore = fs.readFileSync(path.join(repoRoot, '.gitignore'), 'utf8');
+    > 80 |     expect(gitignore).toMatch(/socorre_ai_backend\/private/);
+         |                       ^
+      81 |   });
+      82 | });
+      83 |
+
+      at Object.toMatch (tests/tow/mvp01/towLocalFileStorage.test.js:80:23)
+
+FAIL tests/tow/mvp01/towDocumentService.test.js
+  ● MVP-01 EXT UNIT — authenticated document read through the storage port › admin read returns bytes, mime and original filename from the port
+
+    TypeError: service.readForAdmin is not a function
+
+      143 |   test('admin read returns bytes, mime and original filename from the port', async () => {
+      144 |     const { service, storage } = buildService({ documents });
+    > 145 |     const result = await service.readForAdmin({ documentId: 5 });
+          |                                  ^
+      146 |
+      147 |     expect(result.buffer.equals(Buffer.from('stored-bytes'))).toBe(true);
+      148 |     expect(result.mimeType).toBe('image/jpeg');
+
+      at Object.readForAdmin (tests/tow/mvp01/towDocumentService.test.js:145:34)
+
+  ● MVP-01 EXT UNIT — authenticated document read through the storage port › partner read enforces vehicle ownership and document/vehicle match
+
+    TypeError: service.readForVehicle is not a function
+
+      154 |     const { service } = buildService({ documents });
+      155 |
+    > 156 |     await expect(service.readForVehicle({ partnerId: 1, vehicleId: 1, documentId: 5 }))
+          |                          ^
+      157 |       .resolves.toMatchObject({ mimeType: 'image/jpeg' });
+      158 |
+      159 |     const mismatch = await service.readForVehicle({ partnerId: 1, vehicleId: 2, documentId: 5 })
+
+      at Object.readForVehicle (tests/tow/mvp01/towDocumentService.test.js:156:26)
+
+  ● MVP-01 EXT UNIT — authenticated document read through the storage port › a missing storage object is reported as not_found
+
+    TypeError: service.readForAdmin is not a function
+
+      168 |     storage.read.mockRejectedValueOnce(enoent);
+      169 |
+    > 170 |     await expect(service.readForAdmin({ documentId: 5 })).rejects.toMatchObject({ code: 'not_found' });
+          |                          ^
+      171 |   });
+      172 | });
+      173 |
+
+      at Object.readForAdmin (tests/tow/mvp01/towDocumentService.test.js:170:26)
+
+FAIL tests/tow/mvp01/towEligibilityService.test.js
+  ● MVP-01 UNIT — eligibility service › loads the partner through the port and rejects a non-tow partner
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+      47 |     const service = createEligibilityService(repositories);
+      48 |
+    > 49 |     await expect(service.evaluate({ partnerId: 7, requested })).resolves.toMatchObject({
+         |                                                                          ^
+      50 |       eligible: false,
+      51 |       code: 'partner_not_operational',
+      52 |     });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:174:22)
+      at Object.toMatchObject (tests/tow/mvp01/towEligibilityService.test.js:49:74)
+
+  ● MVP-01 UNIT — eligibility service › a missing partner is not eligible
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+      58 |     const service = createEligibilityService(repositories);
+      59 |
+    > 60 |     await expect(service.evaluate({ partnerId: 42, requested })).resolves.toMatchObject({
+         |                                                                           ^
+      61 |       eligible: false,
+      62 |       code: 'partner_not_operational',
+      63 |     });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:174:22)
+      at Object.toMatchObject (tests/tow/mvp01/towEligibilityService.test.js:60:75)
+
+  ● MVP-01 UNIT — eligibility service › mutating partner type tow -> non-tow revokes eligibility immediately without touching the vehicle
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "partner_not_operational",
+    -   "eligible": false,
+    +   "code": null,
+    +   "eligible": true,
+      }
+
+       95 |
+       96 |     type = 'mechanic';
+    >  97 |     await expect(service.evaluate({ partnerId: 1, requested })).resolves.toMatchObject({
+          |                                                                          ^
+       98 |       eligible: false,
+       99 |       code: 'partner_not_operational',
+      100 |     });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:174:22)
+      at Object.toMatchObject (tests/tow/mvp01/towEligibilityService.test.js:97:74)
+
+FAIL tests/tow/mvp01/towPartnerRepository.test.js
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/modules/tow/adapters/persistence/partner-repository' from 'tests/tow/mvp01/towPartnerRepository.test.js'
+
+      14 |
+      15 | const testDb = require('../../helpers/testDb');
+    > 16 | const { createPartnerRepository } = require('../../../src/modules/tow/adapters/persistence/partner-repository');
+         |                                     ^
+      17 |
+      18 | describe('MVP-01 EXT — partner repository port adapter', () => {
+      19 |   let repository;
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (tests/tow/mvp01/towPartnerRepository.test.js:16:37)
+
+Test Suites: 7 failed, 7 total
+Tests:       20 failed, 46 passed, 66 total
+Snapshots:   0 total
+Time:        1.207 s, estimated 2 s
+Ran all test suites matching /tests\/tow\/mvp01\/towLocalFileStorage.test.js|tests\/tow\/mvp01\/towDocumentDownload.test.js|tests\/tow\/mvp01\/towEligibilityService.test.js|tests\/tow\/mvp01\/towFoundationDomain.test.js|tests\/tow\/mvp01\/towPartnerRepository.test.js|tests\/tow\/mvp01\/towEligibilityIntegration.test.js|tests\/tow\/mvp01\/towDocumentService.test.js/i.

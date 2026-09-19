@@ -147,6 +147,13 @@ function createApp() {
   app.use('/api/wallets', require('./routes/wallets'));
   app.use('/api/disputes', require('./routes/disputes'));
 
+  // MVP-01 — explicit Tow module (module registry, vehicles, documents,
+  // settings). See docs/tow/TOW-MODULE-CONTRACT.md.
+  const { createTowModule } = require('./modules/tow/http/mount');
+  const towModule = createTowModule();
+  app.use('/api/tow', towModule.publicRouter);
+  app.use('/api/admin/tow', towModule.adminRouter);
+
   // Trilhas legadas mantidas por compatibilidade controlada.
   mountLegacyRoutes(app);
 

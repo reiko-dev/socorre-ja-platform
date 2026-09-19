@@ -1,0 +1,504 @@
+
+> socorre-ai-backend@1.0.0 verify:tow
+> node scripts/tow/verify.js
+
+
+=== [verify:tow] OpenAPI 3.1 structure gate ===
+Tow OpenAPI contract validation
+  docs:                             /Volumes/Reiko/projects/work/socorre-system/docs/tow
+  canonical entrypoint:             tow-api-contract.openapi.yaml
+  composition artifact:             tow-api-contract.base.openapi.yaml
+  OpenAPI version:                  3.1.0
+  Contract version:                 1.0.0-draft.4
+  Canonical paths:                  56
+  Base paths:                       51
+  Composed paths:                   56
+  Composed operations:              66
+  Shadowed base paths:              10
+  Unallowlisted dropped methods:    0
+  $ref occurrences checked:         490
+  External/local-file $refs:        124
+  Unresolved refs:                  0
+  Missing operationId:              0
+  Duplicate operationId:            0
+  Path-parameter mismatches:        0
+  Request bodies checked:           24
+  Request bodies without schema:    0
+  Responses checked:                66
+  Operations without 2xx:           0
+  2xx responses without schema:     0
+  Component schemas checked:        110
+  Inline schema nodes checked:      124
+  JSON Schema definition errors:    0
+  Canonical enum mismatches:        0
+  Forbidden legacy enum values:     0
+  TowSettingsPatch errors:          0
+  RESULT:                           PASS
+
+Shadowed base paths (base methods must survive composition or be allowlisted):
+  - /tow/requests: base=[post] composed=[get,post] dropped=[] added=[get]
+  - /tow/partner/opportunities: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/settings: base=[get,patch] composed=[get,patch] dropped=[] added=[]
+  - /admin/tow/vehicle-documents/{documentId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/requests/{requestId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/disputes/{disputeId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches/preview: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches: base=[post] composed=[post] dropped=[] added=[]
+  - /admin/tow/payout-batches/{batchId}: base=[get] composed=[get] dropped=[] added=[]
+  - /admin/tow/payout-batches/{batchId}/process: base=[post] composed=[post] dropped=[] added=[]
+  allowlist: (empty — the frozen contract drops no base method)
+
+=== [verify:tow] contract suite (OpenAPI + patch semantics + discovery + consumer smoke) ===
+PASS tests/contract/openapi.structure.test.js
+PASS tests/contract/towSettingsPatch.test.js
+PASS tests/contract/consumerSmoke.test.js
+PASS tests/contract/towRefResolution.test.js
+PASS tests/contract/consumerDiscovery.test.js
+
+Test Suites: 5 passed, 5 total
+Tests:       62 passed, 62 total
+Snapshots:   0 total
+Time:        1.858 s, estimated 2 s
+Ran all test suites matching /tests\/contract/i.
+
+=== [verify:tow] focused Tow suite (offline) ===
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/1/photos HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "GET /api/upload/emergency-requests/1/photos/pickup HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/2/photos HTTP/1.1" 201 522 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "GET /api/upload/emergency-requests/2/photos/pickup HTTP/1.1" 200 311 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/3/photos HTTP/1.1" 201 522 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "GET /api/upload/emergency-requests/3/photos/pickup HTTP/1.1" 200 311 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/4/photos HTTP/1.1" 201 523 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "GET /api/upload/emergency-requests/4/photos/pickup HTTP/1.1" 200 311 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/5/photos HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:45 +0000] "POST /api/upload/emergency-requests/5/photos HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/6/photos HTTP/1.1" 201 523 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/6/photos/pickup HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/6/photos/pickup HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/999999/photos HTTP/1.1" 404 59 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/999999/photos/pickup HTTP/1.1" 404 59 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/7/photos/engine HTTP/1.1" 400 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/8/photos/delivery HTTP/1.1" 404 74 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/9/photos HTTP/1.1" 201 531 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/10/photos HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/11/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/11/photos HTTP/1.1" 201 532 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 101 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 101 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 112 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/12/photos HTTP/1.1" 400 83 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/13/photos HTTP/1.1" 400 100 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/13/photos HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/13/photos HTTP/1.1" 400 81 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/14/photos HTTP/1.1" 400 94 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/15/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/15/photos/pickup HTTP/1.1" 200 311 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/16/photos HTTP/1.1" 201 539 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/16/photos/delivery?format=json HTTP/1.1" 200 5007 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/17/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/17/photos HTTP/1.1" 200 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/18/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/18/photos HTTP/1.1" 201 539 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/19/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/19/photos HTTP/1.1" 200 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/20/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/20/photos HTTP/1.1" 201 539 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/21/photos HTTP/1.1" 500 54 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/21/photos HTTP/1.1" 201 525 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/22/photos HTTP/1.1" 500 54 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/23/photos HTTP/1.1" 201 526 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/23/photos HTTP/1.1" 503 115 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/23/photos/pickup HTTP/1.1" 503 115 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/24/photos HTTP/1.1" 201 526 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/24/photos/pickup HTTP/1.1" 500 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/25/photos HTTP/1.1" 201 526 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/25/photos/pickup HTTP/1.1" 500 54 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/26/complete HTTP/1.1" 400 82 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/27/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 110 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/28/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/29/complete HTTP/1.1" 400 77 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/30/complete HTTP/1.1" 200 886 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/30/complete HTTP/1.1" 200 995 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/31/complete HTTP/1.1" 200 881 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/32/complete HTTP/1.1" 400 77 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/32/complete HTTP/1.1" 200 885 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/33/complete HTTP/1.1" 400 77 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/33/complete HTTP/1.1" 200 791 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/35/complete HTTP/1.1" 400 92 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/36/complete HTTP/1.1" 200 864 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/37/complete HTTP/1.1" 200 863 "-" "-"
+PASS tests/tow/g2PhotoContract.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests HTTP/1.1" 503 212 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/emergency-requests/38/complete HTTP/1.1" 200 790 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/39/photos HTTP/1.1" 201 526 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "GET /api/upload/emergency-requests/39/photos/pickup HTTP/1.1" 200 311 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:46 +0000] "POST /api/upload/emergency-requests/40/photos HTTP/1.1" 201 526 "-" "-"
+PASS tests/tow/baseline/adminSeed.test.js
+PASS tests/tow/foundation/towHarnessLifecycle.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/1/start HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/1/complete HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/2/start HTTP/1.1" 401 45 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/3/start HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/3/complete HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/4/start HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/4/complete HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/99999/start HTTP/1.1" 404 59 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/5/start HTTP/1.1" 200 820 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/6/start HTTP/1.1" 200 820 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/6/start HTTP/1.1" 200 940 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/7/start HTTP/1.1" 400 129 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/8/start HTTP/1.1" 200 820 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/9/complete HTTP/1.1" 400 82 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/10/complete HTTP/1.1" 400 76 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/11/complete HTTP/1.1" 400 137 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/12/complete HTTP/1.1" 200 861 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/13/complete HTTP/1.1" 200 841 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/13/complete HTTP/1.1" 200 961 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/14/start HTTP/1.1" 200 821 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/14/start HTTP/1.1" 200 941 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/14/start HTTP/1.1" 200 941 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/14/start HTTP/1.1" 200 941 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/14/start HTTP/1.1" 200 941 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/15/complete HTTP/1.1" 200 841 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/15/complete HTTP/1.1" 200 961 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/15/complete HTTP/1.1" 200 961 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/15/complete HTTP/1.1" 200 961 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/15/complete HTTP/1.1" 200 961 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/16/start HTTP/1.1" 200 821 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/16/cancel HTTP/1.1" 404 86 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:49 +0000] "POST /api/emergency-requests/17/start HTTP/1.1" 500 54 "-" "-"
+PASS tests/tow/towHttp.transport.test.js
+PASS tests/tow/mvp01/towFoundationApi.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/module-status HTTP/1.1" 200 137 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 254 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/module-status HTTP/1.1" 200 154 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 200 237 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 422 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 344 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/tow/vehicles/1 HTTP/1.1" 200 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/1/activate HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/1 HTTP/1.1" 200 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/2/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 654 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 422 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/3 HTTP/1.1" 404 79 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 409 118 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles HTTP/1.1" 200 963 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/tow/vehicles/5 HTTP/1.1" 409 118 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/5 HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/7/activate HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/7/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/7/documents HTTP/1.1" 200 307 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/7 HTTP/1.1" 200 331 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 200 362 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/admin/tow/vehicle-documents/1/approve HTTP/1.1" 200 316 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/7 HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/8/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 422 113 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/admin/tow/vehicle-documents/2/reject HTTP/1.1" 200 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/9/documents HTTP/1.1" 422 130 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/9/documents HTTP/1.1" 200 36 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/10/documents HTTP/1.1" 201 318 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/admin/tow/vehicle-documents/3/approve HTTP/1.1" 200 339 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/10 HTTP/1.1" 200 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 334 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow/vehicles/11/documents HTTP/1.1" 201 318 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/admin/tow/vehicle-documents/4/approve HTTP/1.1" 200 339 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/tow/vehicles/11 HTTP/1.1" 200 335 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "GET /api/admin/tow/settings HTTP/1.1" 200 108 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 422 148 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 114 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 141 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 141 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 113 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 400 143 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1478 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 403 142 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 403 142 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 178 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 180 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 315 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 297 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 404 124 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:50 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 185 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 276 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 409 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 409 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 500 89 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/7/withdraw HTTP/1.1" 200 454 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 201 446 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/9/withdraw HTTP/1.1" 200 454 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/10/withdraw HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/10/withdraw HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/999999/withdraw HTTP/1.1" 404 117 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/11/withdraw HTTP/1.1" 403 86 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/12/withdraw HTTP/1.1" 200 477 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/13/withdraw HTTP/1.1" 200 478 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/13/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/14/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/15/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/16/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/tow-proposals/abc/withdraw HTTP/1.1" 400 102 "-" "-"
+PASS tests/tow/g3TowProposals.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "PATCH /api/tow-proposals/17 HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "DELETE /api/tow-proposals/17 HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/emergency-requests/29/cancel HTTP/1.1" 200 1318 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/emergency-requests/30/cancel HTTP/1.1" 200 1305 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/emergency-requests/31/cancel HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/emergency-requests/32/cancel HTTP/1.1" 403 43 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "POST /api/emergency-requests/999999/cancel HTTP/1.1" 404 59 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 401 45 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 403 69 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.55 HTTP/1.1" 400 203 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&longitude=-46.63 HTTP/1.1" 400 203 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=abc&longitude=def HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=0&longitude=0 HTTP/1.1" 400 165 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=91&longitude=10 HTTP/1.1" 400 169 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=10&longitude=-181 HTTP/1.1" 400 169 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=Infinity&longitude=10 HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=&longitude= HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude= HTTP/1.1" 400 203 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=%20%20%20&longitude=-46.63 HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=3.5 HTTP/1.1" 200 129 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=0 HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=-5 HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=abc HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=Infinity HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=-Infinity HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=NaN HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 200 143 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 315 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 297 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 315 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 305 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 246 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 1329 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=10 HTTP/1.1" 200 2557 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=mechanic&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 1335 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&radius=30000 HTTP/1.1" 200 1333 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 2533 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=true HTTP/1.1" 200 1330 "-" "-"
+PASS tests/tow/g3NearbyCoordinates.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=true HTTP/1.1" 200 3736 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333 HTTP/1.1" 200 1330 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=false HTTP/1.1" 200 1330 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=true HTTP/1.1" 200 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=true HTTP/1.1" 200 1330 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:51 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.5505&longitude=-46.6333&exclude_proposed=true HTTP/1.1" 200 1330 "-" "-"
+PASS tests/tow/foundation/towHarnessEnvFile.test.js
+PASS tests/tow/foundation/towDeterministicFoundation.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 500 54 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 464 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 437 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 573 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 567 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 569 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 587 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/documents HTTP/1.1" 200 2111 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2499 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 400 84 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 400 149 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 573 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/submit HTTP/1.1" 400 855 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 970 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 573 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 567 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 569 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 587 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/submit HTTP/1.1" 200 2539 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1422 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 574 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 568 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 570 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 588 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/submit HTTP/1.1" 200 2543 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/documents HTTP/1.1" 200 2115 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/10/verify HTTP/1.1" 200 604 "-" "-"
+PASS tests/tow/towDocumentFlow.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2492 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/11/verify HTTP/1.1" 200 598 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2502 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/12/verify HTTP/1.1" 200 600 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2511 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/13/verify HTTP/1.1" 200 618 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2503 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1423 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 574 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 568 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 570 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 588 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/submit HTTP/1.1" 200 2543 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/documents HTTP/1.1" 200 2115 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/15/verify HTTP/1.1" 400 66 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/15/verify HTTP/1.1" 200 610 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2531 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/9/documents/status HTTP/1.1" 200 397 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 578 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/documents HTTP/1.1" 200 2125 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "POST /api/partners/documents/submit HTTP/1.1" 200 2553 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/documents HTTP/1.1" 200 2125 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/14/verify HTTP/1.1" 200 604 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/18/verify HTTP/1.1" 200 608 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/16/verify HTTP/1.1" 200 600 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "PUT /api/partners/documents/admin/17/verify HTTP/1.1" 200 618 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:52 +0000] "GET /api/partners/me/onboarding-status HTTP/1.1" 200 2513 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1411 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1412 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 575 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 569 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 571 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 589 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/documents/upload HTTP/1.1" 201 575 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "GET /api/partners/documents HTTP/1.1" 200 2120 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "GET /api/partners/documents HTTP/1.1" 200 586 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1425 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/12/location HTTP/1.1" 200 948 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1425 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 98 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 98 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 90 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 90 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 90 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/13/location HTTP/1.1" 400 90 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/partners/onboarding/complete HTTP/1.1" 201 1425 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/999999/location HTTP/1.1" 404 54 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PUT /api/partners/1/location HTTP/1.1" 403 69 "-" "-"
+PASS tests/tow/mvp01/towFoundationAuthz.test.js
+PASS tests/tow/towLifecycleController.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/tow/vehicles HTTP/1.1" 201 332 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "GET /api/admin/tow/module HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "GET /api/tow/vehicles HTTP/1.1" 401 60 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 201 295 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/admin/tow/vehicle-documents/1/approve HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/admin/tow/vehicle-documents/1/reject HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 403 121 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/tow/vehicles HTTP/1.1" 403 106 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:19:06:53 +0000] "POST /api/tow/vehicles/1/documents HTTP/1.1" 404 79 "-" "-"
+PASS tests/tow/baseline/dbBaselineSafety.test.js
+PASS tests/tow/foundation/towPostgresFoundation.e2e.test.js
+PASS tests/tow/mvp01/towFoundationDomain.test.js
+PASS tests/tow/foundation/towPostgresGuard.test.js
+PASS tests/tow/baseline/schemaSnapshot.test.js
+PASS tests/tow/mvp01/towSettingsRepository.test.js
+PASS tests/tow/mvp01/towArchitectureBoundary.test.js
+PASS tests/tow/mvp01/towActivateConflictMapping.test.js
+PASS tests/tow/mvp01/towEligibilityService.test.js
+PASS tests/tow/towProposalIdempotency.test.js
+PASS tests/tow/socketService.tow.test.js
+PASS tests/tow/mvp01/towDocumentService.test.js
+
+Test Suites: 5 skipped, 24 passed, 24 of 29 total
+Tests:       58 skipped, 427 passed, 485 total
+Snapshots:   0 total
+Time:        8.858 s, estimated 16 s
+Ran all test suites matching /tests\/tow/i.
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Creating 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Creating 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Created 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Starting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Started 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Waiting 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Healthy 
+PostgreSQL test container is healthy
+healthcheck: healthy
+
+=== [verify:tow] prepare database + migrations from zero ===
+[verify:tow] migrations against postgresql://tow_test@127.0.0.1:55432/socorre_ai_tow_test
+[verify:tow] migrations applied: 3 (batch 1)
+[verify:tow] tables in public: 32
+[verify:tow] database ready at 127.0.0.1:55432/socorre_ai_tow_test
+
+=== [verify:tow] PostgreSQL foundation gate ===
+::ffff:127.0.0.1 - - [19/Sep/2026:19:07:00 +0000] "GET /health HTTP/1.1" 200 179 "-" "-"
+PASS tests/tow/foundation/towPostgresFoundation.e2e.test.js
+  T00 PostgreSQL test foundation
+    ✓ the disposable container reports PostgreSQL 14 (3 ms)
+    ✓ migrations apply from a truly empty schema (273 ms)
+    ✓ the Tow safety guard fails closed for non-test targets (1 ms)
+    ✓ per-test isolation: truncate clears data and rollback leaves no leakage (54 ms)
+    ✓ docker compose publishes exactly the DB_PORT the guard and the client use (60 ms)
+    ✓ the Express app answers GET /health from the same PostgreSQL singleton (341 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        0.989 s, estimated 1 s
+Ran all test suites matching /tests\/tow\/foundation\/towPostgresFoundation.e2e.test.js/i.
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopping 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Stopped 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removing 
+ Container socorre-tow-test-55432-cb0d0933-tow-postgres-test-1 Removed 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removing 
+ Network socorre-tow-test-55432-cb0d0933_tow-test-net Removed 
+PostgreSQL test environment destroyed (containers, volumes, network)
+
+=== [verify:tow] summary ===
+  PASS  OpenAPI 3.1 structure gate
+  PASS  contract suite (OpenAPI + patch semantics + discovery + consumer smoke)
+  PASS  focused Tow suite (offline)
+  PASS  prepare database + migrations from zero
+  PASS  PostgreSQL foundation gate
+
+[verify:tow] GREEN

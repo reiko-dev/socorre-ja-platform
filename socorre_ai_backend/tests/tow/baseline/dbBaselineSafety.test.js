@@ -45,6 +45,12 @@ const {
   assertBaselineEligible,
   migrateBaseline,
 } = require('../../../scripts/tow/db-baseline');
+const {
+  PINNED_MIGRATIONS,
+  directoryMigrations,
+  assertPinnedMigrations,
+  expectedMigrations,
+} = require('../../../scripts/tow/run-db-baseline-gate');
 
 const BACKEND_DIR = path.resolve(__dirname, '..', '..', '..');
 
@@ -641,5 +647,36 @@ describe('T01 SAFETY — baseline eligibility is centralized', () => {
     expect(source).not.toMatch(/allowExisting\s*=/);
     expect(source).not.toMatch(/or pass --allow-existing/);
     expect(source).toMatch(/--allow-existing was removed/);
+  });
+});
+
+/* ------------------------------------------------------------------------- *
+ * MMVP-3 — the migration scope is PINNED: the directory is only a
+ * cross-check, so a smuggled migration fails loudly instead of being absorbed.
+ * ------------------------------------------------------------------------- */
+
+describe('T01 SAFETY — the migration scope is pinned (no silent drift)', () => {
+  test('the exact 3 MVP-01 migrations are pinned', () => {
+    expect(PINNED_MIGRATIONS).toEqual([
+      '001_baseline_schema.js',
+      '002_baseline_settings.js',
+      '003_mvp01_tow_foundation.js',
+    ]);
+  });
+
+  test('the real migrations directory matches the pinned list', () => {
+    expect(directoryMigrations()).toEqual(PINNED_MIGRATIONS.slice().sort());
+    expect(expectedMigrations()).toEqual(PINNED_MIGRATIONS.slice().sort());
+  });
+
+  test('an extra migration file FAILS LOUDLY and names the unexpected file', () => {
+    const smuggled = [...PINNED_MIGRATIONS, '004_smuggled_scope.js'].sort();
+    expect(() => assertPinnedMigrations(PINNED_MIGRATIONS, smuggled)).toThrow(/unexpected/);
+    expect(() => assertPinnedMigrations(PINNED_MIGRATIONS, smuggled)).toThrow(/004_smuggled_scope\.js/);
+  });
+
+  test('a missing migration file also fails loudly', () => {
+    expect(() => assertPinnedMigrations(PINNED_MIGRATIONS, PINNED_MIGRATIONS.slice(0, -1)))
+      .toThrow(/missing: 003_mvp01_tow_foundation\.js/);
   });
 });

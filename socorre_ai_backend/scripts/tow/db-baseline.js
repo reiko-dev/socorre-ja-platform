@@ -54,11 +54,14 @@ const REQUIRED_TABLES = [
   'real_time_tracking',
   'reviews',
   'revoked_tokens',
+  'service_modules',
   'services',
   'subscription_history',
   'subscriptions',
   'system_settings',
   'tow_proposals',
+  'tow_vehicle_documents',
+  'tow_vehicles',
   'user_documents',
   'users',
   'wallet_transactions',
@@ -72,9 +75,13 @@ const INFRASTRUCTURE_TABLES = ['knex_migrations', 'knex_migrations_lock'];
  * Tables allowed to hold rows on a freshly seeded baseline:
  *   - `users`           -> exactly the default administrator;
  *   - `system_settings` -> structural default configuration inserted by
- *                          migration 002 (not functional data).
+ *                          migration 002 (not functional data);
+ *   - `service_modules` -> the structural Tow module registry row seeded by
+ *                          migration 003 (`tow`/`tow`/`tow`, enabled). It is
+ *                          configuration, not functional business data: it
+ *                          creates no user/partner/request/order/payment.
  */
-const ALLOWED_NON_EMPTY_TABLES = ['users', 'system_settings'];
+const ALLOWED_NON_EMPTY_TABLES = ['users', 'system_settings', 'service_modules'];
 
 const EXPECTED_ADMIN_COUNT = 1;
 const EXPECTED_SETTINGS_COUNT = SETTINGS.length;
@@ -159,6 +166,15 @@ function baselineViolations(report, expectations = {}) {
     const present = new Set(report.settings.keys);
     const missing = SETTINGS.map((row) => row.setting_key).filter((key) => !present.has(key));
     if (missing.length > 0) violations.push(`"system_settings" is missing keys: ${missing.join(', ')}`);
+  }
+
+  // The module registry is structural: exactly the canonical Tow row. This
+  // keeps the "no functional data" guarantee sharp while allowing the module
+  // configuration row (migration 003) to exist.
+  if (report.counts.service_modules !== undefined && report.counts.service_modules !== 1) {
+    violations.push(
+      `"service_modules" must contain exactly 1 row (the canonical Tow module), found ${report.counts.service_modules}`
+    );
   }
 
   for (const table of report.tables) {

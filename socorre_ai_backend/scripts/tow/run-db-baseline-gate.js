@@ -38,6 +38,7 @@ const {
 } = require('./db-connection');
 const { RESET_CONFIRM_TOKEN, CONFIRM_VAR, describeResetTarget } = require('./db-reset-guard');
 const {
+  MIGRATIONS_DIR,
   migrateBaseline,
   runSeed,
   assertBaseline,
@@ -50,6 +51,46 @@ const { describeSeedResult } = require('./admin-seed');
 const { snapshotSchema, compareSnapshots, formatComparison, fingerprintOf } = require('./schema-snapshot');
 
 const EVIDENCE_DIR = path.resolve(testEnv.BACKEND_DIR, '..', 'docs', 'evidence', 't01');
+
+/**
+ * The expected applied migration list is PINNED explicitly, so a smuggled
+ * migration (e.g. `004_*.js`) can never be absorbed silently: any directory
+ * content that differs from this list trips the gate with the unexpected
+ * filename. The directory read is only a cross-check.
+ */
+const PINNED_MIGRATIONS = Object.freeze([
+  '001_baseline_schema.js',
+  '002_baseline_settings.js',
+  '003_mvp01_tow_foundation.js',
+]);
+
+function directoryMigrations() {
+  return fs.readdirSync(MIGRATIONS_DIR).filter((file) => file.endsWith('.js')).sort();
+}
+
+/**
+ * Pure cross-check used by the gate (and unit-tested offline): any file in the
+ * directory that is not in the pinned list is named in the thrown error, so a
+ * smuggled migration trips the gate instead of being absorbed silently.
+ */
+function assertPinnedMigrations(pinned, actual) {
+  const expected = pinned.slice().sort();
+  const found = actual.slice().sort();
+  const unexpected = found.filter((file) => !expected.includes(file));
+  const missing = expected.filter((file) => !found.includes(file));
+  if (unexpected.length > 0 || missing.length > 0) {
+    throw new Error(
+      'migrations directory does not match the pinned MVP-01 baseline '
+      + `(unexpected: ${unexpected.join(', ') || '(none)'}; missing: ${missing.join(', ') || '(none)'}; `
+      + `expected: [${expected.join(', ')}], found: [${found.join(', ')}])`
+    );
+  }
+  return expected;
+}
+
+function expectedMigrations() {
+  return assertPinnedMigrations(PINNED_MIGRATIONS, directoryMigrations());
+}
 
 function assertEmptyDatabase(tables) {
   if (tables.length !== 0) {
@@ -123,7 +164,7 @@ async function runGate() {
 
       console.log('[db-gate] stage 3/9: migrate from zero');
       const first = await migrateBaseline(db);
-      assertApplied(first.applied, ['001_baseline_schema.js', '002_baseline_settings.js']);
+      assertApplied(first.applied, expectedMigrations());
       console.log(`[db-gate] migrations applied: ${first.applied.join(', ')} (batch ${first.batch})`);
 
       console.log('[db-gate] stage 4/9: seed the default administrator');
@@ -151,7 +192,7 @@ async function runGate() {
       const afterReset = await listTables(db);
       assertEmptyDatabase(afterReset);
       const second = await migrateBaseline(db);
-      assertApplied(second.applied, ['001_baseline_schema.js', '002_baseline_settings.js']);
+      assertApplied(second.applied, expectedMigrations());
       const seedAgain = await runSeed(db, process.env);
       if (!seedAgain.created) throw new Error(`expected the administrator to be created again, got "${seedAgain.reason}"`);
       const secondReport = await assertBaseline(db, { expectedAdminEmail: admin.ADMIN_EMAIL });
@@ -221,4 +262,14 @@ if (require.main === module) {
   });
 }
 
-module.exports = { disposableAdminCredentials, assertEmptyDatabase, assertApplied, assertEnvironmentGone, runGate };
+module.exports = {
+  disposableAdminCredentials,
+  assertEmptyDatabase,
+  assertApplied,
+  assertEnvironmentGone,
+  runGate,
+  PINNED_MIGRATIONS,
+  directoryMigrations,
+  assertPinnedMigrations,
+  expectedMigrations,
+};

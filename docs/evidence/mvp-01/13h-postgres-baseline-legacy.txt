@@ -1,0 +1,39 @@
+PASS tests/tow/towPostgres.e2e.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests/1/start HTTP/1.1" 200 1663 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests/1/complete HTTP/1.1" 200 1709 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1972 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 200 2057 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&exclude_proposed=true HTTP/1.1" 200 143 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 200 2091 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals/1/withdraw HTTP/1.1" 200 554 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals/1/withdraw HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1990 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 409 171 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.55&longitude=-46.63&radius=0 HTTP/1.1" 400 157 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=0&longitude=0 HTTP/1.1" 400 165 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 315 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow HTTP/1.1" 400 246 "-" "-"
+PASS tests/tow/g3TowPostgres.e2e.test.js
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1992 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 400 188 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/tow-proposals HTTP/1.1" 201 541 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=&longitude= HTTP/1.1" 400 166 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude= HTTP/1.1" 400 203 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1993 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1974 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 201 1975 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "GET /api/emergency-requests/nearby?type=tow&latitude=-23.55&longitude=-46.63&radius=30000 HTTP/1.1" 200 7975 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 400 141 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 400 128 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:20:16:09 +0000] "POST /api/emergency-requests HTTP/1.1" 400 143 "-" "-"
+PASS tests/tow/baseline/dbBaseline.e2e.test.js
+
+Test Suites: 3 passed, 3 total
+Tests:       42 passed, 42 total
+Snapshots:   0 total
+Time:        5.063 s
+Ran all test suites matching /tests\/tow\/baseline\/dbBaseline.e2e.test.js|tests\/tow\/towPostgres.e2e.test.js|tests\/tow\/g3TowPostgres.e2e.test.js/i.

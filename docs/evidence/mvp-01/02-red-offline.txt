@@ -1,0 +1,424 @@
+FAIL tests/tow/mvp01/towFoundationApi.test.js
+  ● MVP-01 API — Tow foundation › module status and toggle › module-status is public and starts enabled
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      64 |     test('module-status is public and starts enabled', async () => {
+      65 |       const response = await request(app).get('/api/tow/module-status');
+    > 66 |       expect(response.status).toBe(200);
+         |                               ^
+      67 |       expect(response.body.success).toBe(true);
+      68 |       expect(response.body.data).toMatchObject({ module_key: 'tow', service_key: 'tow', enabled: true });
+      69 |     });
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:66:31)
+
+  ● MVP-01 API — Tow foundation › module status and toggle › a non-admin cannot toggle or read the admin module view
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 404
+
+      74 |         .set(alpha.headers)
+      75 |         .send({ enabled: false, reason: 'nope' });
+    > 76 |       expect(toggle.status).toBe(403);
+         |                             ^
+      77 |       expect(toggle.body.error.code).toBe('forbidden');
+      78 |
+      79 |       const read = await request(app).get('/api/admin/tow/module').set(alpha.headers);
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:76:29)
+
+  ● MVP-01 API — Tow foundation › module status and toggle › admin toggle disables new business and is idempotent
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      87 |         .set(adminHeaders)
+      88 |         .send({ enabled: false, reason: 'maintenance window' });
+    > 89 |       expect(disabled.status).toBe(200);
+         |                               ^
+      90 |       expect(disabled.body.data.enabled).toBe(false);
+      91 |       expect(disabled.body.data.disabled_reason).toBe('maintenance window');
+      92 |
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:89:31)
+
+  ● MVP-01 API — Tow foundation › module status and toggle › an invalid toggle body is rejected as validation_error
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 422
+    Received: 404
+
+      116 |         .set(adminHeaders)
+      117 |         .send({ enabled: 'yes' });
+    > 118 |       expect(response.status).toBe(422);
+          |                               ^
+      119 |       expect(response.body.error.code).toBe('validation_error');
+      120 |     });
+      121 |   });
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:118:31)
+
+  ● MVP-01 API — Tow foundation › TowVehicle lifecycle › creates, lists, updates and activates a vehicle
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 404
+
+      124 |     test('creates, lists, updates and activates a vehicle', async () => {
+      125 |       const created = await request(app).post('/api/tow/vehicles').set(alpha.headers).send(validVehicle());
+    > 126 |       expect(created.status).toBe(201);
+          |                              ^
+      127 |       expect(created.body.data).toMatchObject({ active: false, plate: 'ABC1D23' });
+      128 |       expect(created.body.data.pricing.minimum_charge_cents).toBe(15000);
+      129 |       const vehicleId = created.body.data.id;
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:126:30)
+
+  ● MVP-01 API — Tow foundation › TowVehicle lifecycle › activating a second vehicle transfers the single active slot
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 404
+
+      154 |     test('activating a second vehicle transfers the single active slot', async () => {
+      155 |       const second = await request(app).post('/api/tow/vehicles').set(alpha.headers).send(validVehicle('XYZ9Z99'));
+    > 156 |       expect(second.status).toBe(201);
+          |                             ^
+      157 |       const secondId = second.body.data.id;
+      158 |
+      159 |       const activated = await request(app)
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:156:29)
+
+  ● MVP-01 API — Tow foundation › TowVehicle lifecycle › invalid vehicle input is a validation_error
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 422
+    Received: 404
+
+      175 |         .set(alpha.headers)
+      176 |         .send({ ...validVehicle('BAD1BAD'), supported_vehicle_classes: [] });
+    > 177 |       expect(response.status).toBe(422);
+          |                               ^
+      178 |       expect(response.body.error.code).toBe('validation_error');
+      179 |     });
+      180 |
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:177:31)
+
+  ● MVP-01 API — Tow foundation › TowVehicle lifecycle › another partner vehicle is isolated (not_found)
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      181 |     test('another partner vehicle is isolated (not_found)', async () => {
+      182 |       const created = await request(app).post('/api/tow/vehicles').set(beta.headers).send(validVehicle('BETA123'));
+    > 183 |       const foreignId = created.body.data.id;
+          |                                           ^
+      184 |       const response = await request(app).get(`/api/tow/vehicles/${foreignId}`).set(alpha.headers);
+      185 |       expect(response.status).toBe(404);
+      186 |       expect(response.body.error.code).toBe('not_found');
+
+      at Object.id (tests/tow/mvp01/towFoundationApi.test.js:183:43)
+
+  ● MVP-01 API — Tow foundation › vehicle documents and operational eligibility › uploaded documents are pending and do not make the vehicle operational
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      191 |     test('uploaded documents are pending and do not make the vehicle operational', async () => {
+      192 |       const created = await request(app).post('/api/tow/vehicles').set(alpha.headers).send(validVehicle('DOC1D23'));
+    > 193 |       const vehicleId = created.body.data.id;
+          |                                           ^
+      194 |       await request(app).post(`/api/tow/vehicles/${vehicleId}/activate`).set(alpha.headers).send({});
+      195 |
+      196 |       const upload = await request(app)
+
+      at Object.id (tests/tow/mvp01/towFoundationApi.test.js:193:43)
+
+  ● MVP-01 API — Tow foundation › vehicle documents and operational eligibility › admin approval makes the vehicle operational
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      214 |       const adminHeaders = { Authorization: `Bearer ${tokenFor(admin)}` };
+      215 |       const list = await request(app).get('/api/admin/tow/vehicle-documents').set(adminHeaders);
+    > 216 |       expect(list.status).toBe(200);
+          |                           ^
+      217 |       expect(list.body.data.items.length).toBeGreaterThan(0);
+      218 |       const documentId = list.body.data.items[0].id;
+      219 |       const vehicleId = list.body.data.items[0].vehicle_id;
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:216:27)
+
+  ● MVP-01 API — Tow foundation › vehicle documents and operational eligibility › a non-admin cannot list or approve vehicle documents
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 404
+
+      232 |     test('a non-admin cannot list or approve vehicle documents', async () => {
+      233 |       const response = await request(app).get('/api/admin/tow/vehicle-documents').set(alpha.headers);
+    > 234 |       expect(response.status).toBe(403);
+          |                               ^
+      235 |     });
+      236 |
+      237 |     test('reject requires a reason and marks the document rejected', async () => {
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:234:31)
+
+  ● MVP-01 API — Tow foundation › vehicle documents and operational eligibility › reject requires a reason and marks the document rejected
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      238 |       const adminHeaders = { Authorization: `Bearer ${tokenFor(admin)}` };
+      239 |       const created = await request(app).post('/api/tow/vehicles').set(beta.headers).send(validVehicle('REJ1R23'));
+    > 240 |       const vehicleId = created.body.data.id;
+          |                                           ^
+      241 |       const upload = await request(app)
+      242 |         .post(`/api/tow/vehicles/${vehicleId}/documents`)
+      243 |         .set(beta.headers)
+
+      at Object.id (tests/tow/mvp01/towFoundationApi.test.js:240:43)
+
+  ● MVP-01 API — Tow foundation › typed Tow settings › admin can read the MVP defaults and patch a validated value
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      266 |       const adminHeaders = { Authorization: `Bearer ${tokenFor(admin)}` };
+      267 |       const before = await request(app).get('/api/admin/tow/settings').set(adminHeaders);
+    > 268 |       expect(before.status).toBe(200);
+          |                             ^
+      269 |       expect(before.body.data.tow_initial_radius_km).toBeGreaterThan(0);
+      270 |
+      271 |       const patched = await request(app)
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:268:29)
+
+  ● MVP-01 API — Tow foundation › typed Tow settings › an invalid settings patch is a validation_error
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 422
+    Received: 404
+
+      286 |         .set(adminHeaders)
+      287 |         .send({ tow_initial_radius_km: '15' });
+    > 288 |       expect(response.status).toBe(422);
+          |                               ^
+      289 |       expect(response.body.error.code).toBe('validation_error');
+      290 |     });
+      291 |   });
+
+      at Object.toBe (tests/tow/mvp01/towFoundationApi.test.js:288:31)
+
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "GET /api/tow/module-status HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "PATCH /api/admin/tow/module HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "GET /api/admin/tow/vehicle-documents HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "GET /api/admin/tow/settings HTTP/1.1" 404 68 "-" "-"
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "PATCH /api/admin/tow/settings HTTP/1.1" 404 68 "-" "-"
+FAIL tests/tow/mvp01/towFoundationDomain.test.js
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/modules/tow/domain' from 'tests/tow/mvp01/towFoundationDomain.test.js'
+
+      16 | 'use strict';
+      17 |
+    > 18 | const domain = require('../../../src/modules/tow/domain');
+         |                ^
+      19 |
+      20 | describe('MVP-01 UNIT — Tow domain', () => {
+      21 |   describe('canonical module identity', () => {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (tests/tow/mvp01/towFoundationDomain.test.js:18:16)
+
+FAIL tests/tow/mvp01/towFoundationAuthz.test.js
+  ● MVP-01 AUTHZ — admin-only and ownership › unauthenticated access is 401
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      52 |
+      53 |     const created = await request(app).post('/api/tow/vehicles').set(alphaHeaders).send(validVehicle('AUTH123'));
+    > 54 |     alphaVehicleId = created.body.data.id;
+         |                                        ^
+      55 |     expect(alphaPartner.type).toBe('tow');
+      56 |   });
+      57 |
+
+      at Object.id (tests/tow/mvp01/towFoundationAuthz.test.js:54:40)
+
+  ● MVP-01 AUTHZ — admin-only and ownership › a customer user is not an admin and cannot toggle the module
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      52 |
+      53 |     const created = await request(app).post('/api/tow/vehicles').set(alphaHeaders).send(validVehicle('AUTH123'));
+    > 54 |     alphaVehicleId = created.body.data.id;
+         |                                        ^
+      55 |     expect(alphaPartner.type).toBe('tow');
+      56 |   });
+      57 |
+
+      at Object.id (tests/tow/mvp01/towFoundationAuthz.test.js:54:40)
+
+  ● MVP-01 AUTHZ — admin-only and ownership › a partner cannot approve/reject their own vehicle document
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      52 |
+      53 |     const created = await request(app).post('/api/tow/vehicles').set(alphaHeaders).send(validVehicle('AUTH123'));
+    > 54 |     alphaVehicleId = created.body.data.id;
+         |                                        ^
+      55 |     expect(alphaPartner.type).toBe('tow');
+      56 |   });
+      57 |
+
+      at Object.id (tests/tow/mvp01/towFoundationAuthz.test.js:54:40)
+
+  ● MVP-01 AUTHZ — admin-only and ownership › a customer cannot manage TowVehicles
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      52 |
+      53 |     const created = await request(app).post('/api/tow/vehicles').set(alphaHeaders).send(validVehicle('AUTH123'));
+    > 54 |     alphaVehicleId = created.body.data.id;
+         |                                        ^
+      55 |     expect(alphaPartner.type).toBe('tow');
+      56 |   });
+      57 |
+
+      at Object.id (tests/tow/mvp01/towFoundationAuthz.test.js:54:40)
+
+  ● MVP-01 AUTHZ — admin-only and ownership › document upload is scoped to the owning partner (not_found)
+
+    TypeError: Cannot read properties of undefined (reading 'id')
+
+      52 |
+      53 |     const created = await request(app).post('/api/tow/vehicles').set(alphaHeaders).send(validVehicle('AUTH123'));
+    > 54 |     alphaVehicleId = created.body.data.id;
+         |                                        ^
+      55 |     expect(alphaPartner.type).toBe('tow');
+      56 |   });
+      57 |
+
+      at Object.id (tests/tow/mvp01/towFoundationAuthz.test.js:54:40)
+
+FAIL tests/tow/mvp01/towVehicleConcurrency.e2e.test.js
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/modules/tow' from 'tests/tow/mvp01/towVehicleConcurrency.e2e.test.js'
+
+      17 | const describePostgres = postgres.isEnabled() ? describe : describe.skip;
+      18 |
+    > 19 | const { buildTowServices, TowError } = require('../../../src/modules/tow');
+         |                                        ^
+      20 |
+      21 | async function seedTowPartner(db, name) {
+      22 |   const [user] = await db('users').insert({
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (tests/tow/mvp01/towVehicleConcurrency.e2e.test.js:19:40)
+
+::ffff:127.0.0.1 - - [19/Sep/2026:18:22:57 +0000] "POST /api/tow/vehicles HTTP/1.1" 404 68 "-" "-"
+FAIL tests/tow/mvp01/towArchitectureBoundary.test.js
+  ● MVP-01 SEC — architecture boundary › domain and application import no infrastructure
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      48 |   test('domain and application import no infrastructure', () => {
+      49 |     const files = [...listJsFiles(DOMAIN_DIR), ...listJsFiles(APPLICATION_DIR)];
+    > 50 |     expect(files.length).toBeGreaterThan(0);
+         |                          ^
+      51 |     for (const file of files) {
+      52 |       const source = fs.readFileSync(file, 'utf8');
+      53 |       for (const specifier of importSpecifiers(source)) {
+
+      at Object.toBeGreaterThan (tests/tow/mvp01/towArchitectureBoundary.test.js:50:26)
+
+  ● MVP-01 SEC — architecture boundary › the canonical service_module_disabled code is owned by the domain
+
+    ENOENT: no such file or directory, open '/Volumes/Reiko/projects/work/socorre-system/socorre_ai_backend/src/modules/tow/domain/errors.js'
+
+      77 |
+      78 |   test('the canonical service_module_disabled code is owned by the domain', () => {
+    > 79 |     const errors = fs.readFileSync(path.join(DOMAIN_DIR, 'errors.js'), 'utf8');
+         |                       ^
+      80 |     expect(errors).toMatch(/service_module_disabled/);
+      81 |   });
+      82 |
+
+      at Object.readFileSync (tests/tow/mvp01/towArchitectureBoundary.test.js:79:23)
+
+  ● MVP-01 SEC — architecture boundary › the new MVP-01 suites contain no hidden skips or focused tests
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "file": "towArchitectureBoundary.test.js",
+    -   "skip": false,
+    +   "skip": true,
+      }
+
+      85 |     for (const file of listJsFiles(testsDir)) {
+      86 |       const source = fs.readFileSync(file, 'utf8');
+    > 87 |       expect({ file: path.basename(file), skip: /(test|it|describe)\.(only|skip)\b/.test(source) }).toEqual({
+         |                                                                                                     ^
+      88 |         file: path.basename(file), skip: false,
+      89 |       });
+      90 |     }
+
+      at Object.toEqual (tests/tow/mvp01/towArchitectureBoundary.test.js:87:101)
+
+FAIL tests/tow/mvp01/towEligibilityService.test.js
+  ● Test suite failed to run
+
+    Cannot find module '../../../src/modules/tow/application/eligibility-service' from 'tests/tow/mvp01/towEligibilityService.test.js'
+
+      10 | 'use strict';
+      11 |
+    > 12 | const { createEligibilityService } = require('../../../src/modules/tow/application/eligibility-service');
+         |                                      ^
+      13 | const domain = require('../../../src/modules/tow/domain');
+      14 |
+      15 | function fakeRepositories({ module = { enabled: true }, vehicle = null, documents = [] } = {}) {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (tests/tow/mvp01/towEligibilityService.test.js:12:38)
+
+Test Suites: 6 failed, 1 skipped, 6 of 7 total
+Tests:       22 failed, 6 skipped, 1 passed, 29 total
+Snapshots:   0 total
+Time:        1.505 s
+Ran all test suites matching /tests\/tow\/mvp01/i.

@@ -61,5 +61,8 @@ app.*.map.json
 # The scope is intentionally one exact path: real `.env` files, `.env.test`,
 # `.env.local`, `.env.production` and `.env.bak` stay ignored.
 !socorre_ai_backend/.env.test.example
+# MVP-01 EXT: Tow documents are private; their default storage tree must never be
+# committed or served statically.
+socorre_ai_backend/private/
 *.pem
 *.key

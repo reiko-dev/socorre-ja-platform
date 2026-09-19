@@ -36,7 +36,13 @@ const { disposableAdminCredentials } = require('../../../scripts/tow/disposable-
 const { snapshotSchema, compareSnapshots, fingerprintOf } = require('../../../scripts/tow/schema-snapshot');
 
 const describePostgres = postgres.isEnabled() ? describe : describe.skip;
-const BASELINE_MIGRATIONS = ['001_baseline_schema.js', '002_baseline_settings.js'];
+// PINNED explicitly: the exact MVP-01 baseline. The directory read below is a
+// cross-check only, so a smuggled `004_*.js` cannot be absorbed silently.
+const BASELINE_MIGRATIONS = Object.freeze([
+  '001_baseline_schema.js',
+  '002_baseline_settings.js',
+  '003_mvp01_tow_foundation.js',
+]);
 
 /** Disposable credentials: generated per run, never committed. */
 function disposableAdmin() {
@@ -85,8 +91,14 @@ describePostgres('T01 PostgreSQL — clean baseline', () => {
       expect(firstApplied.slice().sort()).toEqual(BASELINE_MIGRATIONS.slice().sort());
     });
 
-    test('the migrations directory contains no legacy data migration', () => {
-      const files = fs.readdirSync(MIGRATIONS_DIR).sort();
+    test('the migrations directory matches the pinned baseline exactly (no smuggled migration)', () => {
+      const files = fs.readdirSync(MIGRATIONS_DIR).filter((file) => file.endsWith('.js')).sort();
+      const unexpected = files.filter((file) => !BASELINE_MIGRATIONS.includes(file));
+      if (unexpected.length > 0) {
+        throw new Error(
+          `unexpected migration file(s) outside the pinned MVP-01 baseline: ${unexpected.join(', ')}`
+        );
+      }
       expect(files).toEqual(BASELINE_MIGRATIONS.slice().sort());
       expect(files.some((file) => /015|migrate_existing_data/.test(file))).toBe(false);
     });
@@ -353,7 +365,10 @@ describePostgres('T01 PostgreSQL — clean baseline', () => {
     test('no functional table has rows', async () => {
       const report = await collectReport(db);
       for (const table of REQUIRED_TABLES) {
-        if (table === 'users' || table === 'system_settings') continue;
+        // `users` (admin), `system_settings` (structural defaults) and
+        // `service_modules` (structural module registry: exactly one row) are
+        // configuration, not functional data.
+        if (table === 'users' || table === 'system_settings' || table === 'service_modules') continue;
         expect({ table, count: report.counts[table] }).toEqual({ table, count: 0 });
       }
     });
